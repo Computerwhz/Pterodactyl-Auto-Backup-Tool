@@ -62,3 +62,15 @@ To do this:
 ### 4. Done!
 
 The tool is now set up. Simply run the script to begin using it.
+
+---
+
+## Development
+
+This tool is still in development
+
+**Upcoming Features**
+  - GUI
+  - Selected servers
+  - Schedules
+  - And More
