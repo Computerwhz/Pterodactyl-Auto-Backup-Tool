@@ -9,8 +9,8 @@ It also includes a **dry run mode**, where the tool shows the actions it *would*
 
 API keys give access to critical functions of your Pterodactyl panel. Please follow these security guidelines:
 
-- **Do not share your API keys** publicly or commit them to version control
-- **Restrict permissions** on your keys to only what's needed
+- **Do not share your API keys** publicly or commit them to version control.
+- **Restrict permissions** on your keys to only what's needed.
 - **Rotate keys regularly** and delete unused ones.
 
 Failure to secure your keys could lead to unauthorized access to your servers.
@@ -21,7 +21,18 @@ Failure to secure your keys could lead to unauthorized access to your servers.
 
 Setting up this tool is simple. Just complete the configuration as described in the detailed instructions below:
 
-![Panel Overview](https://github.com/user-attachments/assets/bf6e8221-d32b-4e41-98e2-9596a4cbb353)
+---
+
+## Config
+
+Inside the tool, click the **Options** button to open the configuration window. Here you can:
+
+- **Update the Panel URL** — the base URL of your Pterodactyl panel.
+- **Enter or update Admin and Client API Keys** — required for API access.
+- **Toggle Dry Run Mode** — when enabled, no backups are created or deleted; useful for testing.
+- **Set Auto Delete Locked Backups Preference** — choose if the tool should automatically delete the next unlocked backup when a locked one cannot be deleted, or ask you every time.
+
+---
 
 ### 1. Get Your Panel URL
 
@@ -67,10 +78,9 @@ The tool is now set up. Simply run the script to begin using it.
 
 ## Development
 
-This tool is still in development
+This tool is still in development.
 
-**Upcoming Features**
-  - GUI
-  - Selected servers
-  - Schedules
-  - And More
+**Upcoming Features:**
+
+- Scheduling backups
+- And more
