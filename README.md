@@ -1,5 +1,11 @@
 # Pterodactyl Auto Backup Tool
 
+---
+
+This tool has been archived in favour of [Better Pterodactyl Tools](https://github.com/Computerwhz/Better-Pterodactyl-Tools)
+
+---
+
 This tool automatically backs up all applicable servers on a Pterodactyl panel.  
 It also includes a **dry run mode**, where the tool shows the actions it *would* perform but does not actually execute them.
 
