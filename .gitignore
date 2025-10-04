@@ -1,0 +1,11 @@
+# Maven
+/target/
+dependency-reduced-pom.xml
+
+# IntelliJ
+.idea/
+*.iml
+
+# Logs and temporary files
+*.log
+*.tmp
