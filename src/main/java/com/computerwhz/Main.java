@@ -1,5 +1,9 @@
 package com.computerwhz;
 
+import com.computerwhz.command.BackupAllCommand;
+import com.computerwhz.command.BackupCommand;
+import com.computerwhz.command.ExitCommand;
+import com.computerwhz.command.ListCommand;
 import com.mattmalec.pterodactyl4j.PteroBuilder;
 import com.mattmalec.pterodactyl4j.client.entities.PteroClient;
 
@@ -7,6 +11,7 @@ import com.mattmalec.pterodactyl4j.client.entities.PteroClient;
 // click the <icon src="AllIcons.Actions.Execute"/> icon in the gutter.
 public class Main {
 
+    private final static CommandManager cm = new CommandManager();
     private static String panelUrl;
     private static String apiKey;
     private static PteroClient api;
@@ -33,6 +38,18 @@ public class Main {
         }
 
         backupManager = new BackupManager(getApi());
+        cm.Register("list", new ListCommand());
+        cm.Register("backup", new BackupCommand());
+        cm.Register("backupall", new BackupAllCommand());
+        cm.Register("exit", new ExitCommand());
+        cm.Run();
+    }
+
+    public static void Exit(int exitCode){
+        System.out.println("Exiting Auto Backup tool...");
+        cm.UnRegisterAll();
+        cm.Stop();
+        System.exit(exitCode);
     }
 
     public static BackupManager getBackupManager(){

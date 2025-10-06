@@ -4,45 +4,53 @@ import com.mattmalec.pterodactyl4j.client.entities.Backup;
 import com.mattmalec.pterodactyl4j.client.entities.ClientServer;
 import com.mattmalec.pterodactyl4j.client.entities.PteroClient;
 
+import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 
 public class BackupManager {
 
-    private PteroClient api;
+    private final PteroClient api;
 
     public BackupManager(PteroClient api){ this.api = api; }
 
     public void BackUpAll(){
        List<ClientServer> servers = api.retrieveServers().all().execute();
        for (ClientServer s : servers){
-           int maxBackups = Integer.parseInt(s.getFeatureLimits().getBackups());
-           List<Backup> backups = s.retrieveBackups().all().execute();
-           backups.sort(Comparator.comparing(Backup::getTimeCompleted));
-           if (maxBackups > 0 ){
-               if (backups.size() >= maxBackups) {
-                   Backup oldestBackup = backups.stream()
-                           .filter(b -> !b.isLocked())
-                           .findFirst()
-                           .orElse(null);
-
-                   if (oldestBackup != null) {
-                       System.out.println("Deleting oldest unlocked backup: " + oldestBackup.getName() + " On server " + s.getName() + " (" + s.getIdentifier() + ")" );
-                       oldestBackup.delete().execute();
-
-                   } else {
-                       System.out.println("All backups are locked, cannot delete any! Skipping on server " + s.getName() + " (" + s.getIdentifier() + ")" );
-                   }
-
-                   Backup b = s.getBackupManager().createBackup().setName("Backup Created by Auto Backup tool at " + System.currentTimeMillis()).execute();
-                   System.out.println("Created new backup" + b.getName() + " On server " + s.getName() + " (" + s.getIdentifier() + ")");
-               }
-           }
-           else {
-               System.out.println("Backups disabled skipping on server " + s.getName() + " (" + s.getIdentifier() + ")" );
-           }
+           BackUp(s);
        }
     }
 
+    public void BackUp(ClientServer backupServer){
+        int maxBackups = Integer.parseInt(backupServer.getFeatureLimits().getBackups());
+        List<Backup> backups = new ArrayList<>(backupServer.retrieveBackups().all().execute());
+        backups.sort(Comparator.comparing(Backup::getTimeCompleted));
+        if (maxBackups > 0) {
+            System.out.println("DEBUG Backup enabled");
+            if (backups.size() >= maxBackups) {
+                Backup oldestBackup = backups.stream()
+                        .filter(b -> !b.isLocked())
+                        .findFirst()
+                        .orElse(null);
 
+
+
+                if (oldestBackup != null) {
+                    System.out.println("Deleting oldest unlocked backup: " + oldestBackup.getName() + " On server " + backupServer.getName() + " (" + backupServer.getIdentifier() + ")" );
+                    oldestBackup.delete().execute();
+
+                } else {
+                    System.out.println("All backups are locked, cannot delete any! Skipping server " + backupServer.getName() + " (" + backupServer.getIdentifier() + ")" );
+                    return;
+                }
+            }
+                System.out.println("DEBUG starting backup");
+                Backup b = backupServer.getBackupManager().createBackup().setName("Backup Created by Auto Backup tool at " + System.currentTimeMillis()).execute();
+                System.out.println("Created new backup" + b.getName() + " On server " + backupServer.getName() + " (" + backupServer.getIdentifier() + ")");
+
+        }
+        else {
+            System.out.println("Backups disabled skipping on server " + backupServer.getName() + " (" + backupServer.getIdentifier() + ")" );
+        }
+    }
 }
