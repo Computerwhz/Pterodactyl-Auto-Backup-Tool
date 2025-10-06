@@ -34,7 +34,7 @@ public class Main {
         } catch (Exception e) {
             System.err.println("Panel Connection failed" + e.getMessage());
             e.printStackTrace();
-            System.exit(1);
+            Exit(1);
         }
 
         backupManager = new BackupManager(getApi());
