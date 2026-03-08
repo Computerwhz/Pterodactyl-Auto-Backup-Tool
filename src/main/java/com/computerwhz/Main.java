@@ -1,14 +1,9 @@
 package com.computerwhz;
 
-import com.computerwhz.command.BackupAllCommand;
-import com.computerwhz.command.BackupCommand;
-import com.computerwhz.command.ExitCommand;
-import com.computerwhz.command.ListCommand;
+import com.computerwhz.command.*;
 import com.mattmalec.pterodactyl4j.PteroBuilder;
 import com.mattmalec.pterodactyl4j.client.entities.PteroClient;
 
-//TIP To <b>Run</b> code, press <shortcut actionId="Run"/> or
-// click the <icon src="AllIcons.Actions.Execute"/> icon in the gutter.
 public class Main {
 
     private final static CommandManager cm = new CommandManager();
@@ -16,6 +11,7 @@ public class Main {
     private static String apiKey;
     private static PteroClient api;
     private static BackupManager backupManager;
+    private static BackupTimer timer;
 
     public static void main(String[] args) {
 
@@ -32,16 +28,20 @@ public class Main {
             api = PteroBuilder.createClient(panelUrl, apiKey);
             System.out.println("Connected to the panel successfully");
         } catch (Exception e) {
-            System.err.println("Panel Connection failed" + e.getMessage());
+            System.err.println("Panel Connection failed " + e.getMessage());
             e.printStackTrace();
             Exit(1);
         }
 
         backupManager = new BackupManager(getApi());
+        timer = new BackupTimer();
         cm.Register("list", new ListCommand());
         cm.Register("backup", new BackupCommand());
         cm.Register("backupall", new BackupAllCommand());
         cm.Register("exit", new ExitCommand());
+        cm.Register("help", new HelpCommand());
+        cm.Register("settimer", new SetTimerCommand());
+        cm.Register("canceltimer", new CancelTimerCommand());
         cm.Run();
     }
 
@@ -51,6 +51,8 @@ public class Main {
         cm.Stop();
         System.exit(exitCode);
     }
+
+    public static BackupTimer getTimer() { return timer; }
 
     public static BackupManager getBackupManager(){
         return backupManager;

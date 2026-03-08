@@ -22,6 +22,17 @@ public class BackupManager {
     }
 
     public void BackUp(ClientServer backupServer){
+        if (backupServer.isSuspended()){
+            System.err.println("Server is Suspended");
+            return;
+        }
+        if (backupServer.isInstalling()) {
+            System.err.println("Server is Installing");
+        }
+        if (backupServer.isTransferring()) {
+            System.err.println("Server is Transferring");
+        }
+
         int maxBackups = Integer.parseInt(backupServer.getFeatureLimits().getBackups());
         List<Backup> backups = new ArrayList<>(backupServer.retrieveBackups().all().execute());
         backups.sort(Comparator.comparing(Backup::getTimeCompleted));
